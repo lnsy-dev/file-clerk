@@ -14,10 +14,12 @@
 <script src="./file-clerk.js">
 </script>
 <script src="./file-viewer.js"></script>
+<script src="./file-splitter.js"></script>
 
 <file-uploader></file-uploader>
 <file-clerk id="file_clerk" verbose="true"></file-clerk>
 <file-viewer id="file_viewer"></file-viewer>
+<file-splitter id="file_splitter"></file-splitter>
 <script>
   const fileUploader = document.querySelector('file-uploader');
   fileUploader.addEventListener('fileuploaded', event => {
@@ -31,9 +33,8 @@
   clerk.listFiles().then(res => {console.log(res)});
 
   file_clerk.addEventListener('file-opened', async (e) => {
-    console.log(e.detail.contents)
-    file_viewer.openFile(e.detail.contents);
-
+    const rejoined_file = file_splitter.joinFiles(file_splitter.splitFiles(e.detail.contents))
+    file_viewer.openFile(rejoined_file);
   })
 </script>
 
