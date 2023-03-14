@@ -5,7 +5,6 @@ class FileSplitter extends HTMLElement {
 
   // function to split a dataURL into chunks no bigger than 14kb
   splitFiles(dataURL) {
-
     const CHUNK_SIZE = 14000;
     const totalChunks = Math.ceil(dataURL.length / CHUNK_SIZE);
     const chunks = [];
@@ -28,15 +27,14 @@ class FileSplitter extends HTMLElement {
     chunks.sort((a, b) => a.index - b.index);
 
     // Concatenate the data from each chunk
-    let data = '';
+    let data = "";
     for (let i = 0; i < chunks.length; i++) {
       data += chunks[i].data;
     }
 
-    return data
+    return data;
   }
-
 }
 
 // Define the custom element
-customElements.define('file-splitter', FileSplitter);
+customElements.define("file-splitter", FileSplitter);
