@@ -24,7 +24,6 @@
   const fileUploader = document.querySelector('file-uploader');
   fileUploader.addEventListener('fileuploaded', event => {
     const { fileData, name, notes } = event.detail;
-
     file_clerk.saveFile(name, fileData, notes);
     // Here you can add your logic to handle the uploaded file data and metadata.
   });

@@ -1,3 +1,5 @@
+
+
 class FileClerk extends HTMLElement {
   constructor() {
     super();
@@ -73,11 +75,13 @@ class FileClerk extends HTMLElement {
   }
 
   connectedCallback() {
-    this.innerHTML = `
-      <h1>File Clerk</h1>
-      <div class="file-list"></div>
-    `;
-    this.renderFileList();
+    if (this.hasAttribute('verbose')) {
+      this.innerHTML = `
+        <h1>File Clerk</h1>
+        <div class="file-list"></div>
+      `;
+      this.renderFileList();
+    }
   }
 }
 
