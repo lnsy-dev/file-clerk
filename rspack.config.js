@@ -6,9 +6,9 @@ module.exports = {
     index: "./src/index.js"
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
-    publicPath: "/dist/"
+    path: path.resolve(__dirname),
+    filename: "file-clerk.min.js",
+    publicPath: "/"
   },
   resolve: {
     alias: {
