@@ -1,8 +1,6 @@
-class FileViewer extends HTMLElement {
-  constructor() {
-    super();
-  }
+import DataroomElement from "../dataroom.js";
 
+class FileViewer extends DataroomElement {
   openFile(fileDataUrl) {
     // extract the file type from the data URL
     const fileType = fileDataUrl.split(":")[1].split(";")[0];

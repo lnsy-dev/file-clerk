@@ -1,6 +1,8 @@
-class FileSplitter extends HTMLElement {
-  constructor() {
-    super();
+import DataroomElement from "../dataroom.js";
+
+class FileSplitter extends DataroomElement {
+  async initialize() {
+    // no-op initializer for now
   }
 
   // function to split a dataURL into chunks no bigger than 14kb

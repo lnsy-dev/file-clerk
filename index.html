@@ -4,39 +4,53 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>File Uploader</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js" integrity="sha512-+BMamP0e7wn39JGL8nKAZ3yAQT2dL5oaXWr4ZYlTGkKOaoXM/Yj7c4oy50Ngz5yoUutAG17flueD4F6QpTlPng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./dist/bundle.js"></script>
 </head>
 <body>
 
-  <script src="./file-uploader.js">
-</script>
-
-<script src="./file-clerk.js">
-</script>
-<script src="./file-viewer.js"></script>
-<script src="./file-splitter.js"></script>
 
 <file-uploader></file-uploader>
 <file-clerk id="file_clerk" verbose="true"></file-clerk>
 <file-viewer id="file_viewer"></file-viewer>
 <file-splitter id="file_splitter"></file-splitter>
+<file-archive id="file_archive" target="#file_clerk" verbose="true"></file-archive>
 <script>
-  const fileUploader = document.querySelector('file-uploader');
-  fileUploader.addEventListener('fileuploaded', event => {
-    const { fileData, name, notes } = event.detail;
-    file_clerk.saveFile(name, fileData, notes);
-    // Here you can add your logic to handle the uploaded file data and metadata.
+  window.addEventListener('DOMContentLoaded', () => {
+    const fileUploader = document.querySelector('file-uploader');
+    const fileClerkEl = document.getElementById('file_clerk');
+    const fileViewerEl = document.getElementById('file_viewer');
+    const fileSplitterEl = document.getElementById('file_splitter');
+
+    // Ensure custom element is defined/upgraded before calling its methods
+    const onClerkReady = customElements.whenDefined('file-clerk').then(() => {
+      if (customElements.upgrade) {
+        customElements.upgrade(fileClerkEl);
+      }
+    });
+
+    // Wire uploader -> clerk save
+    fileUploader.addEventListener('fileuploaded', async (event) => {
+      await onClerkReady;
+      const { fileData, name, notes } = event.detail;
+      fileClerkEl.saveFile(name, fileData, notes);
+    });
+
+    // Initial list
+    onClerkReady.then(() => {
+      if (typeof fileClerkEl.listFiles === 'function') {
+        fileClerkEl.listFiles().then((res) => console.log(res));
+      }
+    });
+
+    // Open -> split -> view
+    fileClerkEl.addEventListener('file-opened', async (e) => {
+      const rejoined_file = fileSplitterEl.joinFiles(
+        fileSplitterEl.splitFiles(e.detail.contents)
+      );
+      fileViewerEl.openFile(rejoined_file);
+    });
   });
-
-  const clerk = document.querySelector('file-clerk');
-  clerk.listFiles().then(res => {console.log(res)});
-
-  file_clerk.addEventListener('file-opened', async (e) => {
-    const rejoined_file = file_splitter.joinFiles(file_splitter.splitFiles(e.detail.contents))
-    file_viewer.openFile(rejoined_file);
-  })
 </script>
-
 
 
 </body>

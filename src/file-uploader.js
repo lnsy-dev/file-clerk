@@ -1,6 +1,7 @@
-class FileUploader extends HTMLElement {
-  constructor() {
-    super();
+import DataroomElement from "../dataroom.js";
+
+class FileUploader extends DataroomElement {
+  async initialize() {
     const template = document.createElement('template');
     template.innerHTML = `
       <label for="file-input">Select a file:</label>
@@ -13,22 +14,22 @@ class FileUploader extends HTMLElement {
     `;
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
-  }
 
-  connectedCallback() {
     const fileInput = this.shadowRoot.querySelector('#file-input');
     const fileName = this.shadowRoot.querySelector('#file-name');
     const fileNotes = this.shadowRoot.querySelector('#file-notes');
     const uploadButton = this.shadowRoot.querySelector('#upload-button');
 
     fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      fileName.value = file.name;
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      fileName.value = file.name || '';
       fileNotes.value = `${(file.size / 1024).toFixed(2)} KB`;
     });
 
     uploadButton.addEventListener('click', () => {
-      const file = fileInput.files[0];
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
       const name = fileName.value;
       const notes = fileNotes.value;
       const reader = new FileReader();

@@ -1,7 +1,16 @@
-class FileClerk extends HTMLElement {
-  constructor() {
-    super();
+import DataroomElement from "../dataroom.js";
+import localforage from './vendor/localforage-esm.js';
+
+class FileClerk extends DataroomElement {
+  async initialize() {
     this.crypto = window.crypto || window.msCrypto;
+    if (this.hasAttribute("verbose")) {
+      this.innerHTML = `
+        <h1>File Clerk</h1>
+        <div class="file-list"></div>
+      `;
+      await this.renderFileList();
+    }
   }
 
   async saveFile(filename, contents, metadata) {
@@ -69,16 +78,6 @@ class FileClerk extends HTMLElement {
         fileElement.appendChild(deleteButton);
         fileList.appendChild(fileElement);
       });
-    }
-  }
-
-  connectedCallback() {
-    if (this.hasAttribute("verbose")) {
-      this.innerHTML = `
-        <h1>File Clerk</h1>
-        <div class="file-list"></div>
-      `;
-      this.renderFileList();
     }
   }
 }
