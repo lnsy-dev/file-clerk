@@ -73,7 +73,7 @@ Run it locally with any static server:
 
 Below are the public surfaces you’ll typically use. All persistence happens client-side with IndexedDB via localforage.
 
-### <file-uploader>
+### `<file-uploader>`
 - Purpose: lets the user pick a file; previews name/size; emits fileuploaded.
 - Event: fileuploaded with detail: { fileData, name, notes }
   - fileData is a Data URL (data:<mime>;base64,...)
@@ -88,7 +88,7 @@ uploader.addEventListener('fileuploaded', (e) => {
 ```
 
 
-### <file-clerk>
+### `<file-clerk>`
 - Purpose: persistence and simple UI when verbose is set.
 - Backing store: localforage (IndexedDB with localStorage fallback)
 - Methods:
