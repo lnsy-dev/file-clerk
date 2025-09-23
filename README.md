@@ -3,11 +3,11 @@
 A tiny, browser-only set of Custom Elements for uploading, storing, listing, viewing, splitting, and archiving files — all client-side with IndexedDB (via localforage). No build step required.
 
 This repo includes the following web components:
-- <file-uploader> — file picker UI that emits a fileuploaded event with a Data URL
-- <file-clerk> — persistence and simple UI (optional) backed by localforage
-- <file-viewer> — renders a Data URL by MIME type (images, video, audio, PDF, text)
-- <file-splitter> — splits and rejoins Data URL strings (14 KB chunks)
-- <file-archive> — export/import all saved files as a ZIP (client-only)
+- `<file-uploader>` — file picker UI that emits a fileuploaded event with a Data URL
+- `<file-clerk>` — persistence and simple UI (optional) backed by localforage
+- `<file-viewer>` — renders a Data URL by MIME type (images, video, audio, PDF, text)
+- `<file-splitter>` — splits and rejoins Data URL strings (14 KB chunks)
+- `<file-archive>` — export/import all saved files as a ZIP (client-only)
 
 Quick links
 - Hosted ESM bundle (recommended): https://lindseymysse.com/file-clerk/file-clerk.min.js
