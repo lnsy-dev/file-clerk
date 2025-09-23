@@ -5,10 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>File Uploader</title>
   <script src="./file-clerk.min.js" type="module"></script>
+  <script type="module" src="/markdown-component/dist/mark-down-component.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/assets/variables.css">
+  <link rel="stylesheet" type="text/css" href="/assets/layout.css">
+  <link rel="stylesheet" type="text/css" href="/assets/custom.css">
+
+
 </head>
 <body>
 
+<main>
+  <h1>File Clerk</h1>
+  <h2>Here to save the day, as usual</h2>
+<mark-down src="./README.md"></mark-down>
 
+<h2> A Demo</h2>
 <file-uploader></file-uploader>
 <file-clerk id="file_clerk" verbose="true"></file-clerk>
 <file-viewer id="file_viewer"></file-viewer>
@@ -53,5 +64,6 @@
 </script>
 
 
+</main>
 </body>
 </html>
