@@ -3,76 +3,426 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>File Uploader</title>
+  <title>File Clerk - Complete Demo of All Features</title>
   <script src="./file-clerk.min.js" type="module"></script>
-  <script type="module" src="/markdown-component/dist/mark-down-component.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/assets/variables.css">
-  <link rel="stylesheet" type="text/css" href="/assets/layout.css">
-  <link rel="stylesheet" type="text/css" href="/assets/custom.css">
   <script src="https://lnsy-dev.github.io/simple-github-icon/github-icon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+
   <style>
-    github-icon {
-      position: fixed;
-      right:1em;
-      top: 1em;
-      width: 2em;
-      height: 2em;
+
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+    :root {
+      --body-font-family: "Fira Code", monospace;
+      --primary-hue: 27; /* Original primary hue */  
+      --saturation: 100%;  
+      --lightness: 50%;  
     }
+
+    body {
+      background-color: #FFF8E7;
+      max-width: 60em;
+      margin: auto;
+      font-family: var(--body-font-family);
+    }
+
+    code {
+      font-family: var(--body-font-family);
+    }
+
+    p {
+      color: var(--tertiary-fg-color);
+    }
+
+    a {
+      color: var(--secondary-fg-color);
+    }
+
+    h1, h2, h3 {
+      color: var(--complementary-color);
+    }
+    github-icon {
+      position: absolute;
+      right: 1em;
+      top: 1em;
+      width: 3em;
+    }
+
+    main {
+      width: 40rem;
+    }
+
   </style>
-
-
 </head>
 <body>
 
-<github-icon light href="https://github.com/lnsy-dev/file-clerk"></github-icon>
+
+
+<github-icon href="https://github.com/lnsy-dev/file-clerk"></github-icon>
 
 <main>
-<mark-down src="./README.md"></mark-down>
 
-<h2> A Demo</h2>
-<file-uploader></file-uploader>
+  <mark-down>
+
+<h1>File Clerk - Complete Feature Demo</h1>
+<p>This page demonstrates all features of the File Clerk system with interactive examples and code samples.</p>
+
+<h2>1. File Upload Component</h2>
+<p>The <code>&lt;file-uploader&gt;</code> component provides a user interface for selecting, naming, and uploading files. Files are read as Data URLs.</p>
+
+<h3>Basic Usage:</h3>
+<pre><code>&lt;file-uploader&gt;&lt;/file-uploader&gt;
+
+// Listen for file uploads
+const uploader = document.querySelector('file-uploader');
+uploader.addEventListener('fileuploaded', (event) =&gt; {
+  const { fileData, name, notes } = event.detail;
+  console.log('File uploaded:', name, fileData.substring(0, 50) + '...');
+});</code></pre>
+
+<h3>Live Demo:</h3>
+<file-uploader id="demo_uploader"></file-uploader>
+<div id="upload_output"></div>
+
+<h2>2. File Clerk - Browser Storage</h2>
+<p>The <code>&lt;file-clerk&gt;</code> component manages file storage using IndexedDB/localStorage via localforage. It can save, list, open, and delete files.</p>
+
+<h3>Basic Usage:</h3>
+<pre><code>&lt;file-clerk id="file_clerk" verbose&gt;&lt;/file-clerk&gt;
+
+// Save a file programmatically
+const clerk = document.getElementById('file_clerk');
+await clerk.saveFile('example.txt', 'data:text/plain;base64,SGVsbG8gV29ybGQ=', 'Demo file');
+
+// List all files
+const files = await clerk.listFiles();
+console.log('Stored files:', files);
+
+// Open a file by ID
+await clerk.openFile(fileId);</code></pre>
+
+<h3>Live Demo:</h3>
 <file-clerk id="file_clerk" verbose="true"></file-clerk>
+<button id="add_sample_files">Add Sample Files</button>
+<button id="clear_all_files">Clear All Files</button>
+
+<h2>3. File Viewer</h2>
+<p>The <code>&lt;file-viewer&gt;</code> component renders files based on their MIME type. It supports images, videos, audio, PDFs, and text files.</p>
+
+<h3>Basic Usage:</h3>
+<pre><code>&lt;file-viewer id="viewer"&gt;&lt;/file-viewer&gt;
+
+// Open a file in the viewer
+const viewer = document.getElementById('viewer');
+viewer.openFile('data:text/plain;base64,SGVsbG8gV29ybGQ=');
+
+// Supported formats:
+// - Images: image/jpeg, image/png
+// - Video: video/mp4
+// - Audio: audio/mpeg  
+// - PDF: application/pdf
+// - Text: text/plain</code></pre>
+
+<h3>Live Demo:</h3>
 <file-viewer id="file_viewer"></file-viewer>
+<div>
+  <button id="view_text">View Text File</button>
+  <button id="view_image">View Image (Sample)</button>
+  <button id="clear_viewer">Clear Viewer</button>
+</div>
+
+<h2>4. File Splitter</h2>
+<p>The <code>&lt;file-splitter&gt;</code> component splits large Data URL strings into 14KB chunks and can rejoin them. Useful for handling large files.</p>
+
+<h3>Basic Usage:</h3>
+<pre><code>&lt;file-splitter id="splitter"&gt;&lt;/file-splitter&gt;
+
+// Split a large data URL into chunks
+const splitter = document.getElementById('splitter');
+const dataURL = 'data:text/plain;base64,VmVyeSBsYXJnZSBmaWxlIGRhdGEuLi4=';
+const chunks = splitter.splitFiles(dataURL);
+console.log('Split into', chunks.length, 'chunks');
+
+// Rejoin chunks back to original
+const rejoined = splitter.joinFiles(chunks);
+console.log('Rejoined matches original:', rejoined === dataURL);</code></pre>
+
+<h3>Live Demo:</h3>
 <file-splitter id="file_splitter"></file-splitter>
+<div>
+  <button id="demo_split">Demo File Splitting</button>
+  <div id="split_output"></div>
+</div>
+
+<h2>5. File Archive - ZIP Import/Export</h2>
+<p>The <code>&lt;file-archive&gt;</code> component provides ZIP archive functionality to export all stored files or import files from a ZIP archive.</p>
+
+<h3>Basic Usage:</h3>
+<pre><code>&lt;file-archive target="#file_clerk" verbose&gt;&lt;/file-archive&gt;
+
+// Export all files to ZIP
+const archive = document.querySelector('file-archive');
+await archive.exportArchive(); // Downloads ZIP file
+
+// Import from ZIP file
+const zipFile = // File object from input
+await archive.importArchive(zipFile);</code></pre>
+
+<h3>Live Demo:</h3>
 <file-archive id="file_archive" target="#file_clerk" verbose="true"></file-archive>
+
+<h2>6. File System API</h2>
+<p>The <code>&lt;file-system&gt;</code> component provides access to the native File System API for reading/writing files directly on the user's file system. <em>Requires HTTPS or localhost and modern browsers.</em></p>
+
+<h3>Basic Usage:</h3>
+<pre><code>&lt;file-system id="fs"&gt;&lt;/file-system&gt;
+
+// Pick and open a directory
+const fs = document.getElementById('fs');
+const dirHandle = await fs.pickDirectory();
+const files = await fs.listFiles();
+
+// Pick and read a single file
+const fileResult = await fs.pickFile();
+console.log('File content:', fileResult.content);
+
+// Save content to a file
+await fs.saveFile('Hello, World!', 'greeting.txt');</code></pre>
+
+<h3>Live Demo:</h3>
+<file-system id="file_system"></file-system>
+<div>
+  <button id="pick_directory">Pick Directory</button>
+  <button id="list_files">List Files</button>
+  <button id="pick_file">Pick & Open File</button>
+  <button id="save_file">Save Sample File</button>
+  <div id="filesystem_output"></div>
+</div>
+
+<h2>7. Complete Integration Example</h2>
+<p>This example shows how all components work together in a complete workflow:</p>
+
+<pre><code>// Complete workflow example
+const uploader = document.querySelector('file-uploader');
+const clerk = document.querySelector('file-clerk');
+const viewer = document.querySelector('file-viewer');
+const splitter = document.querySelector('file-splitter');
+const archive = document.querySelector('file-archive');
+
+// 1. Handle file upload
+uploader.addEventListener('fileuploaded', async (event) =&gt; {
+  const { fileData, name, notes } = event.detail;
+  
+  // 2. Save to clerk
+  await clerk.saveFile(name, fileData, notes);
+});
+
+// 3. Handle file opening from clerk
+clerk.addEventListener('file-opened', (event) =&gt; {
+  const fileData = event.detail;
+  
+  // 4. Split the file (demonstration)
+  const chunks = splitter.splitFiles(fileData.contents);
+  const rejoined = splitter.joinFiles(chunks);
+  
+  // 5. View the file
+  viewer.openFile(rejoined);
+});
+
+// 6. Export all files as ZIP when needed
+// archive.exportArchive();</code></pre>
+
+<h2>8. API Reference</h2>
+
+<h3>File Uploader Events:</h3>
+<pre><code>// Dispatched when a file is uploaded
+fileuploaded: {
+  detail: { fileData: string, name: string, notes: string }
+}</code></pre>
+
+<h3>File Clerk Methods:</h3>
+<pre><code>await saveFile(filename, contents, metadata)
+await deleteFile(id)
+await listFiles() // Returns array of file objects
+await openFile(id) // Dispatches 'file-opened' event</code></pre>
+
+<h3>File Viewer Methods:</h3>
+<pre><code>openFile(dataURL) // Renders file based on MIME type
+clear() // Clears the viewer</code></pre>
+
+<h3>File Splitter Methods:</h3>
+<pre><code>splitFiles(dataURL) // Returns array of chunks
+joinFiles(chunks)   // Returns reconstructed dataURL</code></pre>
+
+<h3>File System Methods:</h3>
+<pre><code>await pickDirectory()  // Returns FileSystemDirectoryHandle
+await pickFile()       // Returns {handle, file, content, name, path}
+await saveFile(content, filename) // Returns FileSystemFileHandle
+await listFiles()      // Returns array of file objects
+await deleteFile(handle)</code></pre>
+
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const fileUploader = document.querySelector('file-uploader');
-    const fileClerkEl = document.getElementById('file_clerk');
-    const fileViewerEl = document.getElementById('file_viewer');
-    const fileSplitterEl = document.getElementById('file_splitter');
-
-    // Ensure custom element is defined/upgraded before calling its methods
-    const onClerkReady = customElements.whenDefined('file-clerk').then(() => {
-      if (customElements.upgrade) {
-        customElements.upgrade(fileClerkEl);
-      }
-    });
-
-    // Wire uploader -> clerk save
-    fileUploader.addEventListener('fileuploaded', async (event) => {
-      await onClerkReady;
-      const { fileData, name, notes } = event.detail;
-      fileClerkEl.saveFile(name, fileData, notes);
-    });
-
-    // Initial list
-    onClerkReady.then(() => {
-      if (typeof fileClerkEl.listFiles === 'function') {
-        fileClerkEl.listFiles().then((res) => console.log(res));
-      }
-    });
-
-    // Open -> split -> view
-    fileClerkEl.addEventListener('file-opened', async (e) => {
-      const rejoined_file = fileSplitterEl.joinFiles(
-        fileSplitterEl.splitFiles(e.detail.contents)
-      );
-      fileViewerEl.openFile(rejoined_file);
-    });
+// Demo script to wire everything together
+document.addEventListener('DOMContentLoaded', () => {
+  const uploader = document.getElementById('demo_uploader');
+  const clerk = document.getElementById('file_clerk');
+  const viewer = document.getElementById('file_viewer');
+  const splitter = document.getElementById('file_splitter');
+  const fileSystem = document.getElementById('file_system');
+  
+  // Wire uploader to clerk
+  uploader.addEventListener('fileuploaded', async (event) => {
+    const { fileData, name, notes } = event.detail;
+    await clerk.saveFile(name, fileData, notes);
+    
+    const output = document.getElementById('upload_output');
+    output.innerHTML = `<p><strong>Uploaded:</strong> ${name} (${(fileData.length / 1024).toFixed(2)} KB)</p>`;
   });
+  
+  // Wire clerk to viewer (with splitter demo)
+  clerk.addEventListener('file-opened', (event) => {
+    const fileData = event.detail;
+    
+    // Demo the splitter
+    const chunks = splitter.splitFiles(fileData.contents);
+    const rejoined = splitter.joinFiles(chunks);
+    
+    // View the file
+    viewer.openFile(rejoined);
+  });
+  
+  // Sample files button
+  document.getElementById('add_sample_files').addEventListener('click', async () => {
+    await clerk.saveFile('sample.txt', 'data:text/plain;base64,' + btoa('Hello, World! This is a sample text file.'), 'Sample text file');
+    await clerk.saveFile('data.json', 'data:application/json;base64,' + btoa(JSON.stringify({message: "Hello JSON", timestamp: Date.now()}, null, 2)), 'Sample JSON data');
+  });
+  
+  // Clear all files button
+  document.getElementById('clear_all_files').addEventListener('click', async () => {
+    const files = await clerk.listFiles();
+    for (const file of files) {
+      await clerk.deleteFile(file.id);
+    }
+  });
+  
+  // Viewer demo buttons
+  document.getElementById('view_text').addEventListener('click', () => {
+    viewer.openFile('data:text/plain;base64,' + btoa('This is a sample text file displayed in the viewer.\n\nIt supports:\n- Text files\n- Images (JPEG, PNG)\n- Videos (MP4)\n- Audio (MP3)\n- PDFs\n\nTry uploading different file types to see them rendered!'));
+  });
+  
+  document.getElementById('view_image').addEventListener('click', () => {
+    // 1x1 red pixel PNG
+    viewer.openFile('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAGA/4mfwQAAAABJRU5ErkJggg==');
+  });
+  
+  document.getElementById('clear_viewer').addEventListener('click', () => {
+    viewer.clear();
+  });
+  
+  // Splitter demo
+  document.getElementById('demo_split').addEventListener('click', () => {
+    const largeText = 'This is a demonstration of file splitting. '.repeat(1000);
+    const dataURL = 'data:text/plain;base64,' + btoa(largeText);
+    
+    const chunks = splitter.splitFiles(dataURL);
+    const rejoined = splitter.joinFiles(chunks);
+    
+    const output = document.getElementById('split_output');
+    output.innerHTML = `
+      <p><strong>Original size:</strong> ${dataURL.length} characters</p>
+      <p><strong>Split into:</strong> ${chunks.length} chunks</p>
+      <p><strong>Chunk size:</strong> ~14KB each</p>
+      <p><strong>Rejoined matches original:</strong> ${rejoined === dataURL}</p>
+      <p><strong>First chunk preview:</strong> ${chunks[0].data.substring(0, 100)}...</p>
+    `;
+  });
+  
+  // Wait for components to initialize before setting up file system demos
+  const waitForFileSystem = () => {
+    return new Promise((resolve) => {
+      const checkInterval = setInterval(() => {
+        if (fileSystem && typeof fileSystem.pickDirectory === 'function') {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 100);
+    });
+  };
+  
+  // File System API demos
+  document.getElementById('pick_directory').addEventListener('click', async () => {
+    try {
+      await waitForFileSystem();
+      const handle = await fileSystem.pickDirectory();
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `<p><strong>Selected directory:</strong> ${handle.name}</p>`;
+    } catch (error) {
+      console.error('Directory picker error:', error);
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${error.message}</p>`;
+    }
+  });
+  
+  document.getElementById('list_files').addEventListener('click', async () => {
+    try {
+      await waitForFileSystem();
+      const files = await fileSystem.listFiles();
+      const output = document.getElementById('filesystem_output');
+      if (files.length === 0) {
+        output.innerHTML = '<p>No directory selected or no files found.</p>';
+      } else {
+        output.innerHTML = '<p><strong>Files in directory:</strong></p><ul>' + 
+          files.map(f => `<li>${f.name} (${f.size} bytes, ${f.type || 'unknown type'})</li>`).join('') + 
+          '</ul>';
+      }
+    } catch (error) {
+      console.error('List files error:', error);
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${error.message}</p>`;
+    }
+  });
+  
+  document.getElementById('pick_file').addEventListener('click', async () => {
+    try {
+      await waitForFileSystem();
+      const result = await fileSystem.pickFile();
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `
+        <p><strong>Opened file:</strong> ${result.name}</p>
+        <p><strong>Size:</strong> ${result.file.size} bytes</p>
+        <p><strong>Content preview:</strong> ${result.content.substring(0, 200)}${result.content.length > 200 ? '...' : ''}</p>
+      `;
+    } catch (error) {
+      console.error('File picker error:', error);
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${error.message}</p>`;
+    }
+  });
+  
+  document.getElementById('save_file').addEventListener('click', async () => {
+    try {
+      await waitForFileSystem();
+      const content = `Hello from File Clerk!\n\nGenerated at: ${new Date().toISOString()}\n\nThis file was created using the File System API.`;
+      const handle = await fileSystem.saveFile(content, 'file-clerk-demo.txt');
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `<p><strong>Saved file:</strong> ${handle.name}</p>`;
+    } catch (error) {
+      console.error('File save error:', error);
+      const output = document.getElementById('filesystem_output');
+      output.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${error.message}</p>`;
+    }
+  });
+  
+  // File System error handling
+  fileSystem.addEventListener('file-system-error', (event) => {
+    const { type, message } = event.detail;
+    const output = document.getElementById('filesystem_output');
+    output.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${message}</p>`;
+  });
+});
 </script>
 
+</mark-down>
 
 </main>
 </body>

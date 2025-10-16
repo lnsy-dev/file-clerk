@@ -1,11 +1,34 @@
-import DataroomElement from "../dataroom.js";
+import DataroomElement from "dataroom-js";
 
+/**
+ * File Viewer Component
+ *
+ * A custom element that renders different types of files by parsing their MIME type
+ * from Data URLs. Supports images, videos, audio, PDFs, and text files.
+ *
+ * @class FileViewer
+ * @extends DataroomElement
+ * 
+ * @example
+ * // HTML usage:
+ * <file-viewer></file-viewer>
+ * 
+ * // JavaScript usage:
+ * const viewer = document.querySelector('file-viewer');
+ * viewer.openFile('data:image/jpeg;base64,/9j/4AAQ...');
+ */
 class FileViewer extends DataroomElement {
+  /**
+   * Opens and renders a file based on its Data URL
+   * Parses the MIME type from the Data URL and renders the file accordingly
+   * @param {string} fileDataUrl - The Data URL of the file to display
+   * @returns {void}
+   */
   openFile(fileDataUrl) {
-    // extract the file type from the data URL
+    // Extract the file type from the data URL
     const fileType = fileDataUrl.split(":")[1].split(";")[0];
 
-    // render the file based on its type
+    // Render the file based on its type
     switch (fileType) {
       case "image/jpeg":
       case "image/png":
@@ -28,51 +51,81 @@ class FileViewer extends DataroomElement {
     }
   }
 
+  /**
+   * Renders an image file in the viewer
+   * @param {string} fileDataUrl - The Data URL of the image file
+   * @returns {void}
+   */
   renderImage(fileDataUrl) {
-    const img = document.createElement("img");
-    img.src = fileDataUrl;
+    const img = this.create("img", {
+      src: fileDataUrl
+    });
     this.clear();
-    this.appendChild(img);
   }
 
+  /**
+   * Renders a video file in the viewer with playback controls
+   * @param {string} fileDataUrl - The Data URL of the video file
+   * @returns {void}
+   */
   renderVideo(fileDataUrl) {
-    const video = document.createElement("video");
-    video.controls = true;
-    video.src = fileDataUrl;
+    const video = this.create("video", {
+      controls: true,
+      src: fileDataUrl
+    });
     this.clear();
-    this.appendChild(video);
   }
 
+  /**
+   * Renders an audio file in the viewer with playback controls
+   * @param {string} fileDataUrl - The Data URL of the audio file
+   * @returns {void}
+   */
   renderAudio(fileDataUrl) {
-    const audio = document.createElement("audio");
-    audio.controls = true;
-    audio.src = fileDataUrl;
+    const audio = this.create("audio", {
+      controls: true,
+      src: fileDataUrl
+    });
     this.clear();
-    this.appendChild(audio);
   }
 
+  /**
+   * Renders a text file in the viewer
+   * Fetches the text content from the Data URL and displays it in a pre-formatted element
+   * @param {string} fileDataUrl - The Data URL of the text file
+   * @returns {void}
+   */
   renderText(fileDataUrl) {
     fetch(fileDataUrl)
       .then((response) => response.text())
       .then((text) => {
-        const pre = document.createElement("pre");
-        pre.textContent = text;
         this.clear();
-        this.appendChild(pre);
+        const pre = this.create("pre", {
+          content: text
+        });
       })
       .catch((error) => {
         console.error("Error loading text file:", error);
       });
   }
 
+  /**
+   * Renders a PDF file in the viewer using an embed element
+   * @param {string} fileDataUrl - The Data URL of the PDF file
+   * @returns {void}
+   */
   renderPdf(fileDataUrl) {
-    const embed = document.createElement("embed");
-    embed.src = fileDataUrl;
-    embed.type = "application/pdf";
+    const embed = this.create("embed", {
+      src: fileDataUrl,
+      type: "application/pdf"
+    });
     this.clear();
-    this.appendChild(embed);
   }
 
+  /**
+   * Clears all child elements from the viewer
+   * @returns {void}
+   */
   clear() {
     while (this.firstChild) {
       this.removeChild(this.firstChild);

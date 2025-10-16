@@ -1,17 +1,33 @@
 {
-  "name": "file-clerk",
+  "name": "@lnsy/file-clerk",
   "version": "0.1.0",
-  "private": true,
+  "main": "file-clerk.min.js",
+  "files": [
+    "file-clerk.min.js",
+    "file-clerk.min.js.map"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "dev": "rspack dev",
+    "start": "rspack dev",
     "build": "rspack build"
   },
   "devDependencies": {
     "@rspack/cli": "^1.5.6",
-    "@rspack/core": "^1.5.6"
+    "@rspack/core": "^1.5.6",
+    "@rspack/dev-server": "^1.1.4",
+    "css-loader": "^7.1.2",
+    "cssnano": "^7.1.1",
+    "dotenv": "^17.2.2",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.2.0",
+    "style-loader": "^4.0.0"
   },
   "dependencies": {
     "client-zip": "^2.5.0",
+    "dataroom-js": "^0.7.5",
+    "dotenv": "^17.2.3",
     "localforage": "^1.10.0",
     "localforage-esm": "^1.10.2",
     "unzipit": "^1.4.3"
