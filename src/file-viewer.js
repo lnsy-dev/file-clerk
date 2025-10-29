@@ -32,6 +32,7 @@ class FileViewer extends DataroomElement {
     switch (fileType) {
       case "image/jpeg":
       case "image/png":
+      case "image/webp":
         this.renderImage(fileDataUrl);
         break;
       case "video/mp4":
@@ -57,10 +58,10 @@ class FileViewer extends DataroomElement {
    * @returns {void}
    */
   renderImage(fileDataUrl) {
+    this.clear();
     const img = this.create("img", {
       src: fileDataUrl
     });
-    this.clear();
   }
 
   /**
@@ -69,11 +70,11 @@ class FileViewer extends DataroomElement {
    * @returns {void}
    */
   renderVideo(fileDataUrl) {
+    this.clear();
     const video = this.create("video", {
       controls: true,
       src: fileDataUrl
     });
-    this.clear();
   }
 
   /**
@@ -82,11 +83,11 @@ class FileViewer extends DataroomElement {
    * @returns {void}
    */
   renderAudio(fileDataUrl) {
+    this.clear();
     const audio = this.create("audio", {
       controls: true,
       src: fileDataUrl
     });
-    this.clear();
   }
 
   /**
@@ -96,17 +97,20 @@ class FileViewer extends DataroomElement {
    * @returns {void}
    */
   renderText(fileDataUrl) {
-    fetch(fileDataUrl)
-      .then((response) => response.text())
-      .then((text) => {
-        this.clear();
-        const pre = this.create("pre", {
-          content: text
-        });
-      })
-      .catch((error) => {
-        console.error("Error loading text file:", error);
+    this.clear();
+    try {
+      // Extract the base64 data from the data URL
+      const base64Data = fileDataUrl.split(',')[1];
+      const text = atob(base64Data);
+      const pre = this.create("pre", {
+        content: text
       });
+    } catch (error) {
+      console.error("Error loading text file:", error);
+      const pre = this.create("pre", {
+        content: "Error decoding text file"
+      });
+    }
   }
 
   /**
@@ -115,11 +119,11 @@ class FileViewer extends DataroomElement {
    * @returns {void}
    */
   renderPdf(fileDataUrl) {
+    this.clear();
     const embed = this.create("embed", {
       src: fileDataUrl,
       type: "application/pdf"
     });
-    this.clear();
   }
 
   /**

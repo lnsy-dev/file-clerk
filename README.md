@@ -116,7 +116,7 @@ console.table(files.map(f => ({ id: f.id, name: f.filename })));
 if (files[0]) await clerk.openFile(files[0].id);
 ```
 
-Example: build your own file list UI (no verbose)
+Example: build your own file list UI 
 ```html path=null start=null
 <file-clerk id="clerk"></file-clerk>
 <ul id="list"></ul>
